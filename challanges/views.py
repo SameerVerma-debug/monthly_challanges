@@ -1,25 +1,23 @@
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.http import Http404, HttpResponseNotFound, HttpResponseRedirect
+from django.shortcuts import render
 from django.urls import reverse
 from django.template import loader
 # Create your views here.
 
 month_challange_mapper = {
-    "january": 1,
-    "february": 2,
-    "march": 3,
-    "april": 4,
-    "may": 5,
-    "june": 6,
-    "july": 7,
-    "august": 8,
-    "september": 9,
-    "october": 10,
-    "november": 11,
-    "december": 12,
+    "january": "January Challange",
+    "february": "February Challange",
+    "march": "March Challange",
+    "april": "April Challange",
+    "may": "May Challange",
+    "june": "June Challange",
+    "july": "July Challange",
+    "august": "August Challange",
+    "september": "September Challange",
+    "october": "October Challange",
+    "november": "November Challange",
+    "december": None,
 }
-
-month_wise_challange = ["Not a Valid Month", "january Challange", "february Challange", "march Challange", "april Challange", "may Challange", "june Challange",
-                        "july Challange", "august Challange", "september Challange", "october Challange", "november Challange", "december challange"]
 
 def create_index_page_response():
   # print("----",base_url)
@@ -33,26 +31,34 @@ def create_index_page_response():
   return response
 
 def index(request):
-    response = create_index_page_response()
-    return HttpResponse(response)
+    # response = create_index_page_response()
+    # return HttpResponse(response)
+    return render(request,"challanges/index.html",{
+      "months":[month for month in month_challange_mapper.keys()]
+    })
 
 
 def month_challange(request, month):
     try:
-        month_num = month_challange_mapper[month]
-        challange = month_wise_challange[month_num]
+        challange_text = month_challange_mapper[month.lower()]
+        
+        #convert html document to a string
+        # response_string = loader.render_to_string("challanges/challange.html")
+        # return HttpResponse(response_string)
+        
+        #render (shortcut for above steps)
+        return render(request,"challanges/challange.html",{
+          "month_challange": challange_text,
+          "month_name":month
+        })
     except:
-        return HttpResponseNotFound("Not a valid month number")
-    return HttpResponse(challange)
+        # not_found_response = loader.render_to_string("404.html")
+        # return HttpResponseNotFound(not_found_response)
+        
+        raise Http404() #raises an 404 exception and also look for 404.html file to send as a response
 
 
 def month_challange_by_num(request, month):
-    # try:
-    #     challange = month_wise_challange[month]
-    # except:
-    #     return HttpResponseNotFound("Not a valid month number")
-    # return HttpResponse(challange)
-
     try:
         months = list(month_challange_mapper.keys())
         if month < 1 or month > 12:
@@ -61,4 +67,5 @@ def month_challange_by_num(request, month):
         redirect_path = reverse("month-challange", args=[redirect_month])
         return HttpResponseRedirect(redirect_path)
     except:
-        return HttpResponseNotFound("Not a valid month")
+        not_found_response = loader.render_to_string("404.html")
+        return HttpResponseNotFound(not_found_response)
