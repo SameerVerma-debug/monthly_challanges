@@ -1,0 +1,16 @@
+.container{
+  padding:10px;
+  text-align: center;
+}
+
+.challange-month{
+  font-weight: bold;
+  font-size: large;
+  color:red;
+  margin-bottom: 10px;
+}
+
+.fallback{
+  font-size: larger;
+  font-weight: bold;
+}

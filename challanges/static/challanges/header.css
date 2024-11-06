@@ -1,0 +1,16 @@
+header{
+  background-color: black;
+  height:10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+header nav a{
+  color:white;
+  font-size: x-large;
+  text-decoration: none;
+  &:hover{
+    color:rgb(206, 105, 105)
+  }
+}
